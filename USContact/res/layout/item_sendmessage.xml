@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewContactName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="4dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/black"
+            android:textIsSelectable="false"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewCellPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:textColor="#878787"
+            android:textIsSelectable="false"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" >
+
+        <CheckBox
+            android:id="@+id/checkBoxContact"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

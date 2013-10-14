@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ivory"
+    android:focusable="true"
+    android:focusableInTouchMode="true" >
+
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:hint="@string/searchhint"
+        android:imeOptions="actionNone"
+        android:singleLine="true"
+        android:textColor="#878787"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayoutSendMessage"
+        android:layout_below="@+id/editTextSearch" >
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/grey"
+            android:dividerHeight="1dp"
+            android:drawSelectorOnTop="false"
+            android:fadingEdge="none"
+            android:paddingLeft="8dp"
+            android:paddingRight="16dp"
+            android:scrollbars="vertical"
+            android:scrollingCache="false" >
+        </ListView>
+
+        <cn.ncuhome.widget.IndexBar
+            android:id="@+id/indexBarContacts"
+            android:layout_width="15dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutSendMessage"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gainsboro" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:text="@string/bulksms"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
