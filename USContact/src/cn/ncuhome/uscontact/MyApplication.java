@@ -1,4 +1,4 @@
-package cn.ncuhome.helper;
+package cn.ncuhome.uscontact;
 
 import android.app.Application;
 

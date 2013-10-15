@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,24 +28,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cn.ncuhome.helper.CodeHelper;
 import cn.ncuhome.helper.CodeHelper.BigFatAsyncTaskwithProgressDialog;
@@ -55,10 +37,15 @@ import cn.ncuhome.helper.DataOperation;
 import cn.ncuhome.helper.IOHelper;
 import cn.ncuhome.helper.MyListener.OnServiceListener;
 import cn.ncuhome.helper.WebHelper;
+import cn.ncuhome.menu.MenuApp;
+import cn.ncuhome.menu.MenuDep;
 import cn.ncuhome.service.UpdateService;
 import cn.ncuhome.service.UpdateService.MyBinder;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class MainActivity extends SherlockFragmentActivity {
 
@@ -68,48 +55,28 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	// 声明需要的对象
 	private long exittime = 0;
-	private String[] mDrawerMenuTitles;
-	private ArrayList<Fragment> listFragment;
-	private MyFragmentPagerAdapter mMyFragmentPagerAdapter;
 	private UpdateService updateService;
-
-	// 声明控件对象
-	private ImageView imageViewLeftLine;
-	private ImageView imageViewRightLine;
-	private RelativeLayout relativeLayoutContact;
-	private RelativeLayout relativeLayoutGroup;
-	private ViewPager mViewPager;
-	private DrawerLayout mDrawerLayout;
-	private LinearLayout linearLayoutLeftDrawer;
-	private ListView mDrawerList;
+	SlidingMenu sm;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.content_frame);
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
 
-		// 绑定控件
-		imageViewLeftLine = (ImageView) findViewById(R.id.imageViewLeftLine);
-		imageViewRightLine = (ImageView) findViewById(R.id.imageViewRightLine);
-		relativeLayoutContact = (RelativeLayout) findViewById(R.id.relativeLayoutContact);
-		relativeLayoutGroup = (RelativeLayout) findViewById(R.id.relativeLayoutGroup);
-		mViewPager = (ViewPager) findViewById(R.id.viewPager);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		linearLayoutLeftDrawer = (LinearLayout) findViewById(R.id.linearLayoutLeftDrawer);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		sm = new SlidingMenu(this);
+		sm.setMode(SlidingMenu.LEFT_RIGHT);
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		sm.setMenu(R.layout.menu_frame);
+		sm.setSecondaryMenu(R.layout.menu_frame_two);
+		sm.setShadowDrawable(R.drawable.shadow);
+		sm.setSecondaryShadowDrawable(R.drawable.shadowright);
+		sm.setShadowWidthRes(R.dimen.shadow_width);
+		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		sm.setFadeDegree(0.35f);
+		sm.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 
-		// 设置左边抽屉阴影
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		// 配置左边抽屉菜单ListView
-		mDrawerMenuTitles = getResources().getStringArray(R.array.drawer_menu_array);
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.item_drawer_list, mDrawerMenuTitles));
-
-		// 设置监听器
-		relativeLayoutContact.setOnClickListener(new OnClickEvent());
-		relativeLayoutGroup.setOnClickListener(new OnClickEvent());
-		mDrawerList.setOnItemClickListener(new OnDrawerItemClickListener());
-
+		// [[ 启动相关
 		// 读取sp数据
 		data = getSharedPreferences("data", 0);
 		dataEditor = getSharedPreferences("data", 0).edit();
@@ -136,8 +103,8 @@ public class MainActivity extends SherlockFragmentActivity {
 				dataEditor.commit();
 				showUpdateLog();
 			}
-			// 显示UI界面
-			showUI();
+			showSlidingMenu();
+			changeContactFragment(null, null);
 			// 启动后台检查更新服务
 			if (WebHelper.isConnectingtoInternet(MainActivity.this)) {
 				String updateDay = data.getString("updateDay", null);
@@ -149,6 +116,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		default:
 			break;
 		}
+		// ]]
 	}
 
 	@Override
@@ -157,20 +125,27 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onDestroy();
 	}
 
-	// 显示UI界面
-	private void showUI() {
-		// 配置ImageView
-		imageViewLeftLine.setVisibility(View.VISIBLE);
-		imageViewRightLine.setVisibility(View.INVISIBLE);
+	// 替换联系人页面
+	private void changeContactFragment(String Dep_ID, String Dep_Name) {
+		// 收起SlidingMenu
+		sm.showContent();
+		Dep_ID = Dep_ID == null ? "-1" : Dep_ID;
+		Dep_Name = Dep_Name == null ? "联系人" : Dep_Name;
+		// 替换联系人页面
+		Contacts contacts = new Contacts();
+		Bundle b = new Bundle();
+		b.putString("Dep_ID", Dep_ID);
+		b.putString("Dep_Name", Dep_Name);
+		contacts.setArguments(b);
+		getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contacts, "Contacts").commit();
+		// 更改ActionBar标题
+		getSupportActionBar().setTitle(Dep_Name);
+	}
 
-		// 配置Fragment页面数据
-		listFragment = new ArrayList<Fragment>();
-		listFragment.addAll(getListFragment());
-
-		// 配置ViewPager
-		mMyFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), listFragment);
-		mViewPager.setAdapter(mMyFragmentPagerAdapter);
-		mViewPager.setOnPageChangeListener(onPageChangeListener);
+	// 替换SlidingMenu菜单
+	private void showSlidingMenu() {
+		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame, new MenuDep()).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame_two, new MenuApp()).commit();
 	}
 
 	// [[ 更新组件
@@ -250,81 +225,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	// ]]
 
-	// [[ 监听器
-	private class OnClickEvent implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.relativeLayoutContact:
-				mViewPager.setCurrentItem(0);
-				break;
-			case R.id.relativeLayoutGroup:
-				mViewPager.setCurrentItem(1);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
-
-		@Override
-		public void onPageSelected(int arg0) {
-			CodeHelper.hideKeyboard(MainActivity.this);
-			switch (arg0) {
-			case 0:
-				imageViewLeftLine.setVisibility(View.VISIBLE);
-				imageViewRightLine.setVisibility(View.INVISIBLE);
-				break;
-
-			case 1:
-				imageViewLeftLine.setVisibility(View.INVISIBLE);
-				imageViewRightLine.setVisibility(View.VISIBLE);
-				break;
-			}
-		}
-
-		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {
-		}
-
-		@Override
-		public void onPageScrollStateChanged(int arg0) {
-		}
-	};
-
-	private class OnDrawerItemClickListener implements OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			// TODO Auto-generated method stub
-			switch (position) {
-			case 0:
-				mDrawerLayout.closeDrawer(linearLayoutLeftDrawer);
-				updateDatabase();
-				break;
-
-			case 1:
-				mDrawerLayout.closeDrawer(linearLayoutLeftDrawer);
-				updateApplication();
-				break;
-
-			case 2:
-				finish();
-				System.exit(0);
-				break;
-
-			default:
-				break;
-			}
-		}
-	}
-
-	// ]]
-
-	// [[ 响应事件
+	// [[ 点选事件
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -337,14 +238,57 @@ public class MainActivity extends SherlockFragmentActivity {
 				System.exit(0);
 			}
 			return true;
-		} else if (keyCode == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_DOWN) {
-			if (mDrawerLayout.isDrawerOpen(linearLayoutLeftDrawer)) {
-				mDrawerLayout.closeDrawer(linearLayoutLeftDrawer);
-			} else {
-				mDrawerLayout.openDrawer(linearLayoutLeftDrawer);
-			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuItem bulkSMS = menu.add(0, 1, 0, "群发短信");
+		bulkSMS.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 1:
+			Contacts contacts = (Contacts) getSupportFragmentManager().findFragmentByTag("Contacts");
+			contacts.sendMessage();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
+	}
+
+	// MenuDep菜单选择
+	public void switchMenuDep(String Dep_ID, String Dep_Name) {
+		changeContactFragment(Dep_ID, Dep_Name);
+	}
+
+	// MenuApp菜单选择
+	public void switchMenuApp(int position) {
+		switch (position) {
+		case 0:
+			updateDatabase();
+			break;
+
+		case 1:
+			updateApplication();
+			break;
+
+		case 2:
+			finish();
+			System.exit(0);
+			break;
+
+		default:
+			break;
+		}
+		sm.showContent();
 	}
 
 	// ]]
@@ -368,7 +312,8 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			case 1:
 				DataOperation.insertContactDataByList(MainActivity.this, DataOperation.parseJsonByContact(result));
-				showUI();
+				showSlidingMenu();
+				changeContactFragment(null, null);
 				break;
 
 			case 2:
@@ -471,38 +416,5 @@ public class MainActivity extends SherlockFragmentActivity {
 			System.exit(0);
 			finish();
 		}
-	}
-
-	// 创建FragmentPagerAdapter适配器
-	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-		private ArrayList<Fragment> mListFragment = new ArrayList<Fragment>();
-
-		public MyFragmentPagerAdapter(FragmentManager fm, ArrayList<Fragment> listFragment) {
-			super(fm);
-			this.mListFragment = listFragment;
-		}
-
-		@Override
-		public Fragment getItem(int index) {
-			return mListFragment.get(index);
-		}
-
-		@Override
-		public int getCount() {
-			return mListFragment.size();
-		}
-
-	}
-
-	// 获取Fragment页面数据
-	private ArrayList<Fragment> getListFragment() {
-		ArrayList<Fragment> list = new ArrayList<Fragment>();
-		Contacts contacts = new Contacts();
-		Bundle b = new Bundle();
-		b.putString("Dep_ID", "-1");
-		contacts.setArguments(b);
-		list.add(contacts);
-		list.add(new Groups());
-		return list;
 	}
 }

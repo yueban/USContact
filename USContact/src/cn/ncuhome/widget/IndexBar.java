@@ -54,7 +54,7 @@ public class IndexBar extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		paint.setColor(0xFFA6A9AA);
-		paint.setTextSize(18);
+		paint.setTextSize(getMeasuredHeight() / 35);
 		paint.setTextAlign(Paint.Align.CENTER);
 		float widthCenter = getMeasuredWidth() / 2;
 		if (c.length > 0) {

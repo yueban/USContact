@@ -65,7 +65,7 @@ public class CodeHelper {
 	public static int getVersionCode(Context context) {
 		int versionCode = -1;
 		try {
-			versionCode = context.getPackageManager().getPackageInfo("cn.ncuhome.us", 0).versionCode;
+			versionCode = context.getPackageManager().getPackageInfo("cn.ncuhome.uscontact", 0).versionCode;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">US联系人</string>
     <string name="action_settings">Settings</string>
-    <string name="menu">菜单</string>
     <string name="contentDescription">contentDescription</string>
     <string name="searchhint">联系人</string>
     <string name="bulksms">群发短信</string>
     <string name="confirm">确认</string>
-    <string name="contact">联系人</string>
-    <string name="group">部门</string>
 
-    <string-array name="drawer_menu_array">
+    <string-array name="menu_app">
         <item>更新联系人</item>
         <item>检查新版本</item>
         <item>退出</item>
     </string-array>
 
-    <style name="imageViewTabLine">
+    <style name="menu_app">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dp</item>
-        <item name="android:background">@color/ivory</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/dimgrey</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="windowActivityOpenCloseAnim">

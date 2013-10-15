@@ -29,6 +29,8 @@ import cn.ncuhome.helper.HanZiToPinYin;
 import cn.ncuhome.widget.IndexBar;
 
 import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class SendMessage extends SherlockListActivity {
 
@@ -104,7 +106,7 @@ public class SendMessage extends SherlockListActivity {
 
 		SparseBooleanArray checkedStates = null;
 
-		if (Build.VERSION.SDK_INT <= 11) {
+		if (Build.VERSION.SDK_INT <= 14) {
 			checkedStates = new SparseBooleanArray();
 
 			for (int i = 0; i < mCheckStates.size(); i++) {
@@ -148,7 +150,7 @@ public class SendMessage extends SherlockListActivity {
 
 	// [[响应事件
 	@Override
-	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case 1:
 			isCheckedArray = cloneCheckStates(allIsCheckedArray);
@@ -174,14 +176,14 @@ public class SendMessage extends SherlockListActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		com.actionbarsherlock.view.MenuItem allSelect = menu.add(0, 1, 0, "全选");
-		com.actionbarsherlock.view.MenuItem allUnselect = menu.add(0, 2, 1, "全不选");
-		com.actionbarsherlock.view.MenuItem sendMessage = menu.add(0, 3, 2, "确定");
-		allSelect.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
-		allUnselect.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
-		sendMessage.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+		MenuItem allSelect = menu.add(0, 1, 0, "全选");
+		MenuItem allUnselect = menu.add(0, 2, 1, "全不选");
+		MenuItem sendMessage = menu.add(0, 3, 2, "确定");
+		allSelect.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		allUnselect.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		sendMessage.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 

@@ -34,10 +34,12 @@ import com.actionbarsherlock.app.SherlockListFragment;
 
 public class Contacts extends SherlockListFragment {
 
+	// 声明需要的变量
+	String Dep_Name;
+
 	// 声明需要的控件
 	private EditText editTextSearch;
 	private ListView listView;
-	private RelativeLayout relativeLayoutSendMessage;
 	private RelativeLayout indexDialog;
 	private IndexBar indexBarContacts;
 
@@ -52,7 +54,6 @@ public class Contacts extends SherlockListFragment {
 
 		// 绑定控件
 		editTextSearch = (EditText) view.findViewById(R.id.editTextSearch);
-		relativeLayoutSendMessage = (RelativeLayout) view.findViewById(R.id.relativeLayoutSendMessage);
 		indexDialog = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.indexdialog, null);
 		indexBarContacts = (IndexBar) view.findViewById(R.id.indexBarContacts);
 
@@ -63,7 +64,7 @@ public class Contacts extends SherlockListFragment {
 
 		// 获取传入的数据
 		final String Dep_ID = getArguments().getString("Dep_ID");
-		final String Dep_Name = getArguments().getString("Dep_Name");
+		Dep_Name = getArguments().getString("Dep_Name");
 		String sql = "";
 		String[] selectionArgs = { Dep_ID };
 
@@ -84,17 +85,6 @@ public class Contacts extends SherlockListFragment {
 		setListAdapter(myListAdapter);
 
 		// [[ 设置监听器
-		relativeLayoutSendMessage.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// 跳转到群发短信选择联系人页面，并将当前联系人列表传送过去
-				Intent intent = new Intent(getActivity(), SendMessage.class);
-				intent.putExtra("contactlist", myListAdapter.getList());
-				intent.putExtra("Dep_Name", Dep_Name);
-				startActivity(intent);
-			}
-		});
 		editTextSearch.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -136,6 +126,15 @@ public class Contacts extends SherlockListFragment {
 		});
 		// ]]
 		return view;
+	}
+
+	// 群发短信，供其父Activity调用
+	public void sendMessage() {
+		// 跳转到群发短信选择联系人页面，并将当前联系人列表传送过去
+		Intent intent = new Intent(getActivity(), SendMessage.class);
+		intent.putExtra("contactlist", myListAdapter.getList());
+		intent.putExtra("Dep_Name", Dep_Name);
+		startActivity(intent);
 	}
 
 	// 在onActivityCreated中获取listview的滚动监听器，并设置其监听器（在onCreateView中因为ListView还未生成，会返回null）
