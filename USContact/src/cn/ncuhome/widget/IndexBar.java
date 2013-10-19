@@ -14,8 +14,8 @@ import cn.ncuhome.uscontact.R;
 
 public class IndexBar extends View {
 
-	private char[] c;
 	private ListView listView;
+	private char[] c;
 	private RelativeLayout indexDialog;
 	private TextView textViewDialog;
 	private SectionIndexer sectionIndexer = null;
@@ -75,10 +75,6 @@ public class IndexBar extends View {
 			idx = 0;
 		}
 		if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-			// 获取SectionIndexter对象
-			if (sectionIndexer == null) {
-				sectionIndexer = (SectionIndexer) listView.getAdapter();
-			}
 			// 获取当前索引位置
 			int position = sectionIndexer.getPositionForSection(c[idx]);
 			if (position != -1) {

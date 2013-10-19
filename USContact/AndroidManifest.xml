@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.ncuhome.uscontact"
-    android:versionCode="4"
-    android:versionName="1.4" >
+    android:versionCode="5"
+    android:versionName="1.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -20,9 +20,12 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="cn.ncuhome.uscontact.MainActivity"
-            android:activityOpenEnterAnimation="@anim/enter_enter"
+            android:name="cn.ncuhome.uscontact.Splash"
+            android:configChanges="keyboardHidden"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="cn.ncuhome.uscontact.MainActivity" />
         <activity android:name="cn.ncuhome.uscontact.DepContacts" />
         <activity android:name="cn.ncuhome.uscontact.SendMessage" />
 

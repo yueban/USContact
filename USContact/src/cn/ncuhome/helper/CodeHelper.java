@@ -77,13 +77,13 @@ public class CodeHelper {
 	 * 
 	 * @author bigfat
 	 */
-	public static abstract class BigFatAsyncTaskwithProgressDialog extends AsyncTask<String, Integer, String> {
+	public static abstract class BigFatAsyncTask extends AsyncTask<String, Integer, String> {
 		private ProgressDialog pDialog;
 		private Context mContext;
 		private String url;
 		private String namespace;
 		private String method;
-		private String pTitle;
+		private String pTitle = null;
 
 		/**
 		 * BigFatAsyncTask类的构造函数，用于传参，初始化参数
@@ -99,42 +99,13 @@ public class CodeHelper {
 		 * @param pTitle
 		 *            显示在ProgressDialog上的Title（文本）
 		 */
-		public BigFatAsyncTaskwithProgressDialog(Context context, String url, String namespace, String method, String pTitle) {
+		public BigFatAsyncTask(Context context, String url, String namespace, String method, String pTitle) {
 			this.mContext = context;
 			this.url = url;
 			this.namespace = namespace;
 			this.method = method;
 			this.pTitle = pTitle;
 		}
-
-		@Override
-		protected void onPreExecute() {
-			pDialog = new ProgressDialog(mContext);
-			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pDialog.setTitle(pTitle);
-			pDialog.setCanceledOnTouchOutside(false);
-			pDialog.show();
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			String jsondata = WebHelper.getJsonData(url, namespace, method, params[0]);
-			return jsondata;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			doInMainThread(result);
-			pDialog.dismiss();
-		}
-
-		public abstract void doInMainThread(String result);
-	}
-
-	public static abstract class BigFatAsyncTask extends AsyncTask<String, Integer, String> {
-		private String url;
-		private String namespace;
-		private String method;
 
 		public BigFatAsyncTask(String url, String namespace, String method) {
 			this.url = url;
@@ -143,6 +114,17 @@ public class CodeHelper {
 		}
 
 		@Override
+		protected void onPreExecute() {
+			if (pTitle != null) {
+				pDialog = new ProgressDialog(mContext);
+				pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				pDialog.setTitle(pTitle);
+				pDialog.setCancelable(false);
+				pDialog.show();
+			}
+		}
+
+		@Override
 		protected String doInBackground(String... params) {
 			String jsondata = WebHelper.getJsonData(url, namespace, method, params[0]);
 			return jsondata;
@@ -151,6 +133,9 @@ public class CodeHelper {
 		@Override
 		protected void onPostExecute(String result) {
 			doInMainThread(result);
+			if (pTitle != null) {
+				pDialog.dismiss();
+			}
 		}
 
 		public abstract void doInMainThread(String result);

@@ -31,7 +31,7 @@ import android.os.IBinder;
 import android.view.KeyEvent;
 import android.widget.Toast;
 import cn.ncuhome.helper.CodeHelper;
-import cn.ncuhome.helper.CodeHelper.BigFatAsyncTaskwithProgressDialog;
+import cn.ncuhome.helper.CodeHelper.BigFatAsyncTask;
 import cn.ncuhome.helper.DBHelper;
 import cn.ncuhome.helper.DataOperation;
 import cn.ncuhome.helper.IOHelper;
@@ -49,6 +49,11 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class MainActivity extends SherlockFragmentActivity {
 
+	// 联网获取json数据的类型
+	private enum WebRequest {
+		Dep, Emp, Newversion
+	}
+
 	// 声明sp对象
 	SharedPreferences data;
 	SharedPreferences.Editor dataEditor;
@@ -62,7 +67,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.content_frame);
+		// 设置ActionBar
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		sm = new SlidingMenu(this);
 		sm.setMode(SlidingMenu.LEFT_RIGHT);
@@ -74,7 +81,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
-		sm.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+		sm.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 
 		// [[ 启动相关
 		// 读取sp数据
@@ -125,10 +132,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onDestroy();
 	}
 
+	// [[ 显示UI界面
 	// 替换联系人页面
 	private void changeContactFragment(String Dep_ID, String Dep_Name) {
 		// 收起SlidingMenu
-		sm.showContent();
 		Dep_ID = Dep_ID == null ? "-1" : Dep_ID;
 		Dep_Name = Dep_Name == null ? "联系人" : Dep_Name;
 		// 替换联系人页面
@@ -147,6 +154,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame, new MenuDep()).commit();
 		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame_two, new MenuApp()).commit();
 	}
+
+	// ]]
 
 	// [[ 更新组件
 	// 启动更新服务
@@ -191,18 +200,18 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	// 更新app
 	private void updateApplication() {
-		new MyAsyncTask(MainActivity.this, CodeHelper.url_getNewestVersion, CodeHelper.namespace_getNewestVersion, CodeHelper.method_getNewestVersion, "检查新版本", 2).execute("");
+		new MyAsyncTask(MainActivity.this, CodeHelper.url_getNewestVersion, CodeHelper.namespace_getNewestVersion, CodeHelper.method_getNewestVersion, "检查新版本", WebRequest.Newversion).execute("");
 	}
 
-	// 更新数据库数据
+	// 更新联系人数据库数据
 	private void updateDatabase() {
 		if (!WebHelper.isConnectingtoInternet(this.getApplicationContext())) {
 			Toast.makeText(MainActivity.this, "啊呀，没联网，检查一下吧", Toast.LENGTH_SHORT).show();
 		} else {
 			String[] sql = { "delete from " + DBHelper.T_DepData_name, "delete from " + DBHelper.T_ContactData_name };
 			DBHelper.execSQLDatabase(MainActivity.this, DBHelper.database_name, sql);
-			new MyAsyncTask(MainActivity.this, CodeHelper.url_getDepartmentInfo, CodeHelper.namespace_getDepartmentInfo, CodeHelper.method_getDepartmentInfo, "获取部门分组信息", 0).execute("");
-			new MyAsyncTask(MainActivity.this, CodeHelper.url_getEmployeeInfoByDep_ID, CodeHelper.namespace_getEmployeeInfoByDep_ID, CodeHelper.method_getEmployeeInfoByDep_ID, "获取联系人信息", 1).execute("{\"Dep_ID\":\"-1\"}");
+			new MyAsyncTask(MainActivity.this, CodeHelper.url_getDepartmentInfo, CodeHelper.namespace_getDepartmentInfo, CodeHelper.method_getDepartmentInfo, "获取部门分组信息", WebRequest.Dep).execute("");
+			new MyAsyncTask(MainActivity.this, CodeHelper.url_getEmployeeInfoByDep_ID, CodeHelper.namespace_getEmployeeInfoByDep_ID, CodeHelper.method_getEmployeeInfoByDep_ID, "获取联系人信息", WebRequest.Emp).execute("{\"Dep_ID\":\"-1\"}");
 		}
 	}
 
@@ -217,9 +226,10 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 		}).setNegativeButton("暂不更新", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
+				dataEditor.putString("updateDay", CodeHelper.getUserDate()).commit();
 			}
 		}).create();
+		dialog.setCancelable(false);
 		dialog.show();
 	}
 
@@ -229,15 +239,39 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-			if (System.currentTimeMillis() - exittime > 2000) {
-				Toast.makeText(getApplicationContext(), "亲~再按一次退出哦", Toast.LENGTH_SHORT).show();
-				exittime = System.currentTimeMillis();
-			} else {
-				finish();
-				System.exit(0);
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			switch (event.getAction()) {
+			case KeyEvent.ACTION_DOWN:
+				if (System.currentTimeMillis() - exittime > 2000) {
+					Toast.makeText(getApplicationContext(), "亲~再按一次退出哦", Toast.LENGTH_SHORT).show();
+					exittime = System.currentTimeMillis();
+				} else {
+					finish();
+					System.exit(0);
+				}
+				return true;
+
+			default:
+				break;
 			}
-			return true;
+
+		case KeyEvent.KEYCODE_MENU:
+			switch (event.getAction()) {
+			case KeyEvent.ACTION_DOWN:
+				if (sm.isSecondaryMenuShowing()) {
+					sm.showContent();
+				} else {
+					sm.showSecondaryMenu();
+				}
+				return true;
+
+			default:
+				break;
+			}
+			break;
+		default:
+			break;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
@@ -253,6 +287,13 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			if (sm.isMenuShowing()) {
+				sm.showContent();
+			} else {
+				sm.showMenu();
+			}
+			return true;
 		case 1:
 			Contacts contacts = (Contacts) getSupportFragmentManager().findFragmentByTag("Contacts");
 			contacts.sendMessage();
@@ -294,10 +335,10 @@ public class MainActivity extends SherlockFragmentActivity {
 	// ]]
 
 	// 创建调用webservice获取json数据并处理的异步任务类
-	private class MyAsyncTask extends BigFatAsyncTaskwithProgressDialog {
-		private int flag;
+	private class MyAsyncTask extends BigFatAsyncTask {
+		private WebRequest flag;
 
-		public MyAsyncTask(Context context, String url, String namespace, String method, String pTitle, int flag) {
+		public MyAsyncTask(Context context, String url, String namespace, String method, String pTitle, WebRequest flag) {
 			super(context, url, namespace, method, pTitle);
 			this.flag = flag;
 		}
@@ -306,17 +347,18 @@ public class MainActivity extends SherlockFragmentActivity {
 		public void doInMainThread(String result) {
 			// TODO Auto-generated method stub
 			switch (flag) {
-			case 0:
+			case Dep:
 				DataOperation.insertDepDataByList(MainActivity.this, DataOperation.parseJsonByDepartment(result));
 				break;
 
-			case 1:
+			case Emp:
 				DataOperation.insertContactDataByList(MainActivity.this, DataOperation.parseJsonByContact(result));
+				Toast.makeText(MainActivity.this, "联系人更新完成", Toast.LENGTH_LONG).show();
 				showSlidingMenu();
 				changeContactFragment(null, null);
 				break;
 
-			case 2:
+			case Newversion:
 				try {
 					JSONObject versionData = new JSONArray(result).getJSONObject(0);
 					int newestVersionCode = Integer.parseInt(versionData.getString("versionCode"));

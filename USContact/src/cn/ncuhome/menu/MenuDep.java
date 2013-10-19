@@ -33,7 +33,7 @@ public class MenuDep extends SherlockListFragment {
 		for (int i = 0; i < list.size(); i++) {
 			menu_dep_items[i + 1] = list.get(i).get("Dep_Name");
 		}
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, menu_dep_items);
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_menudep, R.id.textViewItemMenuDep, menu_dep_items);
 		setListAdapter(arrayAdapter);
 	}
 

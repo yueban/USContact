@@ -7,6 +7,13 @@
     <string name="searchhint">联系人</string>
     <string name="bulksms">群发短信</string>
     <string name="confirm">确认</string>
+    <string name="menu_dep_title">部门列表</string>
+    <string name="menu_app_title">选项</string>
+    <string name="splash_ncuhome">南昌大学家园网</string>
+    <string name="splash_contact">站内通讯录</string>
+    <string name="call">拨号</string>
+    <string name="message">短信</string>
+    <string name="addcontact">添加</string>
 
     <string-array name="menu_app">
         <item>更新联系人</item>
@@ -14,12 +21,65 @@
         <item>退出</item>
     </string-array>
 
-    <style name="menu_app">
+    <style name="menu_app_title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">#2E2E2E</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textColor">#767676</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:text">@string/menu_app_title</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="menu_dep_title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">#2E2E2E</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textColor">#767676</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:text">@string/menu_dep_title</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="menu_app_item">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">16dp</item>
-        <item name="android:textColor">@color/dimgrey</item>
+        <item name="android:textColor">#DCDCDC</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="menu_dep_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">#DCDCDC</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="listview_normal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollingCache">false</item>
     </style>
 
     <style name="windowActivityOpenCloseAnim">

@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp" >
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:orientation="vertical" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp" >
 
         <TextView
             android:id="@+id/textViewContactName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:paddingBottom="4dp"
-            android:paddingTop="8dp"
-            android:textColor="@color/black"
+            android:textColor="#000"
             android:textIsSelectable="false"
             android:textSize="16sp" />
 
@@ -25,45 +27,55 @@
             android:id="@+id/textViewCellPhone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingBottom="8dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:textColor="#878787"
             android:textIsSelectable="false"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal" >
+        android:id="@+id/linearLayoutContactOperation"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="-60dp"
+        android:background="#000"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:visibility="gone" >
 
-        <ImageView
-            android:id="@+id/imageViewCall"
-            android:layout_width="36dp"
+        <Button
+            android:id="@+id/buttonCall"
+            android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:contentDescription="@string/contentDescription"
-            android:src="@drawable/call" />
+            android:layout_weight="1"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/call" />
 
-        <ImageView
-            android:id="@+id/imageViewMessage"
-            android:layout_width="36dp"
+        <Button
+            android:id="@+id/buttonMessage"
+            android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:contentDescription="@string/contentDescription"
-            android:src="@drawable/message" />
+            android:layout_weight="1"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/message" />
 
-        <ImageView
-            android:id="@+id/imageViewAddContact"
-            android:layout_width="36dp"
+        <Button
+            android:id="@+id/buttonAddContact"
+            android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:contentDescription="@string/contentDescription"
-            android:src="@drawable/contact_add" />
+            android:layout_weight="1"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/addcontact" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

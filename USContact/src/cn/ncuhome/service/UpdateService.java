@@ -60,8 +60,6 @@ public class UpdateService extends Service {
 					String filename = versionData.getString("filename");
 					getSharedPreferences("data", 0).edit().putString("updateLog", versionData.getString("updateLog")).commit();
 					onServiceListener.ServiceListening(downloadUrl, filename);
-				} else {
-					getSharedPreferences("data", 0).edit().putString("updateDay", CodeHelper.getUserDate()).commit();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

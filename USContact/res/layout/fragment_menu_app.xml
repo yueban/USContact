@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#333333"
+    android:orientation="vertical" >
+
+    <TextView style="@style/menu_app_title" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/divider" />
 
     <ListView
         android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:divider="@color/grey"
-        android:dividerHeight="1dp"
-        android:drawSelectorOnTop="false"
-        android:fadingEdge="none"
-        android:scrollbars="vertical"
-        android:scrollingCache="false" />
+        style="@style/listview_normal"
+        android:divider="@drawable/divider"
+        android:dividerHeight="2dp" />
 
-</RelativeLayout>
+</LinearLayout>

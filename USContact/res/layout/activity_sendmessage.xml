@@ -6,15 +6,10 @@
 
     <ListView
         android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/listview_normal"
         android:layout_alignParentTop="true"
         android:divider="@color/grey"
-        android:dividerHeight="1dp"
-        android:drawSelectorOnTop="false"
-        android:fadingEdge="none"
-        android:scrollbars="vertical"
-        android:scrollingCache="false" >
+        android:dividerHeight="1dp" >
     </ListView>
 
     <cn.ncuhome.widget.IndexBar

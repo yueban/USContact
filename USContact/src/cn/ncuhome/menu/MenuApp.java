@@ -12,7 +12,7 @@ import cn.ncuhome.uscontact.R;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 public class MenuApp extends SherlockListFragment {
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_menu_app, null);
@@ -22,7 +22,7 @@ public class MenuApp extends SherlockListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		String[] menu_app_items = getResources().getStringArray(R.array.menu_app);
-		ArrayAdapter<String> menuAppAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, menu_app_items);
+		ArrayAdapter<String> menuAppAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_menudep, R.id.textViewItemMenuDep, menu_app_items);
 		setListAdapter(menuAppAdapter);
 	}
 
