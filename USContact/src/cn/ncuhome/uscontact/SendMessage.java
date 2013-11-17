@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -25,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.ncuhome.helper.CodeHelper;
 import cn.ncuhome.helper.HanZiToPinYin;
 import cn.ncuhome.widget.IndexBar;
 
@@ -89,34 +89,13 @@ public class SendMessage extends SherlockListActivity {
 			allIsCheckedArray.put(i, true);
 			allIsUnCheckedArray.put(i, false);
 		}
-		isCheckedArray = cloneCheckStates(allIsCheckedArray);
+		isCheckedArray = CodeHelper.cloneCheckStates(allIsCheckedArray);
 	}
 
 	@Override
 	protected void onDestroy() {
 		window.removeView(indexDialog);
 		super.onDestroy();
-	}
-
-	// 因为SparseBooleanArray.clone()这个方法在android4.x.x上修复过，所以在2.x.x上调用会报错，因此用此方法代替clone()
-	private SparseBooleanArray cloneCheckStates(SparseBooleanArray mCheckStates) {
-		if (mCheckStates == null) {
-			return null;
-		}
-
-		SparseBooleanArray checkedStates = null;
-
-		if (Build.VERSION.SDK_INT <= 14) {
-			checkedStates = new SparseBooleanArray();
-
-			for (int i = 0; i < mCheckStates.size(); i++) {
-				checkedStates.put(mCheckStates.keyAt(i), mCheckStates.valueAt(i));
-			}
-		} else {
-			checkedStates = mCheckStates.clone();
-		}
-
-		return checkedStates;
 	}
 
 	// 群发短信
@@ -153,12 +132,12 @@ public class SendMessage extends SherlockListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case 1:
-			isCheckedArray = cloneCheckStates(allIsCheckedArray);
+			isCheckedArray = CodeHelper.cloneCheckStates(allIsCheckedArray);
 			myListAdapter.notifyDataSetChanged();
 			return true;
 
 		case 2:
-			isCheckedArray = cloneCheckStates(allIsUnCheckedArray);
+			isCheckedArray = CodeHelper.cloneCheckStates(allIsUnCheckedArray);
 			myListAdapter.notifyDataSetChanged();
 			return true;
 

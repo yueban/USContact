@@ -65,6 +65,5 @@ public class UpdateService extends Service {
 				e.printStackTrace();
 			}
 		}
-
 	}
 }

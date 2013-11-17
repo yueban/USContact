@@ -18,8 +18,9 @@
         android:textSize="18sp" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayoutContactListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/editTextSearch" >
 
         <ListView

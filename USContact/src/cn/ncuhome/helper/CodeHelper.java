@@ -9,6 +9,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.util.SparseBooleanArray;
 import android.view.inputmethod.InputMethodManager;
 
 public class CodeHelper {
@@ -31,6 +33,27 @@ public class CodeHelper {
 	public static void hideKeyboard(Activity activity) {
 		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+
+	// 因为SparseBooleanArray.clone()这个方法在android4.x.x上修复过，所以在2.x.x上调用会报错，因此用此方法代替clone()
+	public static SparseBooleanArray cloneCheckStates(SparseBooleanArray mCheckStates) {
+		if (mCheckStates == null) {
+			return null;
+		}
+
+		SparseBooleanArray checkedStates = null;
+
+		if (Build.VERSION.SDK_INT <= 14) {
+			checkedStates = new SparseBooleanArray();
+
+			for (int i = 0; i < mCheckStates.size(); i++) {
+				checkedStates.put(mCheckStates.keyAt(i), mCheckStates.valueAt(i));
+			}
+		} else {
+			checkedStates = mCheckStates.clone();
+		}
+
+		return checkedStates;
 	}
 
 	// 根据用户传入的时间表示格式，返回当前时间的格式 如:yyyy-MM-dd

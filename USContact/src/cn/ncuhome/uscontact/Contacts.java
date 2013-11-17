@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +22,6 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -40,7 +40,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 public class Contacts extends SherlockFragment {
 
 	// 声明需要的变量
-	String Dep_Name;
+	private String Dep_Name;
 
 	// 声明需要的控件
 	private ListView listViewContact;
@@ -52,6 +52,8 @@ public class Contacts extends SherlockFragment {
 	private ArrayList<HashMap<String, String>> contactlist = new ArrayList<HashMap<String, String>>();
 	private ArrayList<HashMap<String, String>> searchlist = new ArrayList<HashMap<String, String>>();
 	private MyListAdapter myListAdapter;
+	// 用一个SparseBooleanArray来存储该Item中的View是否已绑定监听器
+	SparseBooleanArray isListened;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,15 +130,7 @@ public class Contacts extends SherlockFragment {
 				// TODO Auto-generated method stub
 			}
 		});
-		listViewContact.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-				View operationBar = view.findViewById(R.id.linearLayoutContactOperation);
-				ExpandAnimation anim = new ExpandAnimation(operationBar, 300);
-				operationBar.startAnimation(anim);
-			}
-		});
 		// ]]
 		return view;
 	}
@@ -166,6 +160,65 @@ public class Contacts extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		// 初始化isListened
+		isListened = new SparseBooleanArray();
+		for (int i = 0; i < myListAdapter.getCount(); i++) {
+			isListened.put(i, false);
+		}
+		// 设置监听器
+		listViewContact.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+				View operationBar = view.findViewById(R.id.linearLayoutContactOperation);
+
+				if (isListened.get(position) == false) {
+					// 声明一个内部类监听联系人列表中的三个click事件（拨号，发短信，添加联系人）
+					class OnClickEvent implements OnClickListener {
+
+						String Emp_Name = ((TextView) view.findViewById(R.id.textViewContactName)).getText().toString();
+						String Emp_Cellphone = ((TextView) view.findViewById(R.id.textViewCellPhone)).getText().toString();
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Uri uri = null;
+							Intent intent = null;
+							switch (v.getId()) {
+							case R.id.buttonCall:
+								uri = Uri.parse("tel:" + Emp_Cellphone);
+								intent = new Intent(Intent.ACTION_DIAL, uri);
+								startActivity(intent);
+								break;
+							case R.id.buttonMessage:
+								uri = Uri.parse("smsto:" + Emp_Cellphone);
+								intent = new Intent(Intent.ACTION_SENDTO, uri);
+								startActivity(intent);
+								break;
+							case R.id.buttonAddContact:
+								uri = android.provider.ContactsContract.Contacts.CONTENT_URI;
+								intent = new Intent(Intent.ACTION_INSERT, uri);
+								intent.putExtra(android.provider.ContactsContract.Intents.Insert.NAME, Emp_Name);
+								intent.putExtra(android.provider.ContactsContract.Intents.Insert.PHONE, Emp_Cellphone);
+
+								startActivity(intent);
+								break;
+							default:
+								break;
+							}
+						}
+					}
+					// 设置监听器
+					operationBar.findViewById(R.id.buttonCall).setOnClickListener(new OnClickEvent());
+					operationBar.findViewById(R.id.buttonMessage).setOnClickListener(new OnClickEvent());
+					operationBar.findViewById(R.id.buttonAddContact).setOnClickListener(new OnClickEvent());
+					isListened.put(position, true);
+				}
+
+				ExpandAnimation anim = new ExpandAnimation(operationBar, 300);
+				operationBar.startAnimation(anim);
+			}
+		});
 		listViewContact.setOnScrollListener(new OnScrollListener() {
 
 			@Override
@@ -175,8 +228,6 @@ public class Contacts extends SherlockFragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 		indexBarContacts.setListView(listViewContact);
@@ -208,9 +259,6 @@ public class Contacts extends SherlockFragment {
 		public final class ViewHolder {
 			TextView textViewContactName;
 			TextView textViewCellPhone;
-			Button buttonCall;
-			Button buttonMessage;
-			Button buttonAddContact;
 			LinearLayout linearLayoutContactOperation;
 		}
 
@@ -288,9 +336,6 @@ public class Contacts extends SherlockFragment {
 				convertView = layout.inflate(R.layout.item_contact, null);
 				holder.textViewContactName = (TextView) convertView.findViewById(R.id.textViewContactName);
 				holder.textViewCellPhone = (TextView) convertView.findViewById(R.id.textViewCellPhone);
-				holder.buttonCall = (Button) convertView.findViewById(R.id.buttonCall);
-				holder.buttonMessage = (Button) convertView.findViewById(R.id.buttonMessage);
-				holder.buttonAddContact = (Button) convertView.findViewById(R.id.buttonAddContact);
 				holder.linearLayoutContactOperation = (LinearLayout) convertView.findViewById(R.id.linearLayoutContactOperation);
 				convertView.setTag(holder);
 			} else {
@@ -304,42 +349,6 @@ public class Contacts extends SherlockFragment {
 
 				holder.textViewContactName.setText(Emp_Name);
 				holder.textViewCellPhone.setText(Emp_Cellphone);
-				// 声明一个内部类监听联系人列表中的三个click事件（拨号，发短信，添加联系人）
-				class OnClickEvent implements OnClickListener {
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						Uri uri = null;
-						Intent intent = null;
-						switch (v.getId()) {
-						case R.id.buttonCall:
-							uri = Uri.parse("tel:" + Emp_Cellphone);
-							intent = new Intent(Intent.ACTION_DIAL, uri);
-							startActivity(intent);
-							break;
-						case R.id.buttonMessage:
-							uri = Uri.parse("smsto:" + Emp_Cellphone);
-							intent = new Intent(Intent.ACTION_SENDTO, uri);
-							startActivity(intent);
-							break;
-						case R.id.buttonAddContact:
-							uri = android.provider.ContactsContract.Contacts.CONTENT_URI;
-							intent = new Intent(Intent.ACTION_INSERT, uri);
-							intent.putExtra(android.provider.ContactsContract.Intents.Insert.NAME, Emp_Name);
-							intent.putExtra(android.provider.ContactsContract.Intents.Insert.PHONE, Emp_Cellphone);
-
-							startActivity(intent);
-							break;
-						default:
-							break;
-						}
-					}
-				}
-				// 设置监听器
-				holder.buttonCall.setOnClickListener(new OnClickEvent());
-				holder.buttonMessage.setOnClickListener(new OnClickEvent());
-				holder.buttonAddContact.setOnClickListener(new OnClickEvent());
 
 				((LinearLayout.LayoutParams) holder.linearLayoutContactOperation.getLayoutParams()).bottomMargin = -60;
 				holder.linearLayoutContactOperation.setVisibility(View.GONE);
