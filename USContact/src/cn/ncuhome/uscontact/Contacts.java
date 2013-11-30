@@ -170,7 +170,7 @@ public class Contacts extends SherlockFragment {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-				View operationBar = view.findViewById(R.id.linearLayoutContactOperation);
+				View operationBar = view.findViewById(R.id.relativeLayoutContactOperation);
 
 				if (isListened.get(position) == false) {
 					// 声明一个内部类监听联系人列表中的三个click事件（拨号，发短信，添加联系人）
@@ -181,21 +181,20 @@ public class Contacts extends SherlockFragment {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							Uri uri = null;
 							Intent intent = null;
 							switch (v.getId()) {
-							case R.id.buttonCall:
+							case R.id.imageViewCall:
 								uri = Uri.parse("tel:" + Emp_Cellphone);
 								intent = new Intent(Intent.ACTION_DIAL, uri);
 								startActivity(intent);
 								break;
-							case R.id.buttonMessage:
+							case R.id.imageViewMessage:
 								uri = Uri.parse("smsto:" + Emp_Cellphone);
 								intent = new Intent(Intent.ACTION_SENDTO, uri);
 								startActivity(intent);
 								break;
-							case R.id.buttonAddContact:
+							case R.id.imageViewAddContact:
 								uri = android.provider.ContactsContract.Contacts.CONTENT_URI;
 								intent = new Intent(Intent.ACTION_INSERT, uri);
 								intent.putExtra(android.provider.ContactsContract.Intents.Insert.NAME, Emp_Name);
@@ -209,9 +208,9 @@ public class Contacts extends SherlockFragment {
 						}
 					}
 					// 设置监听器
-					operationBar.findViewById(R.id.buttonCall).setOnClickListener(new OnClickEvent());
-					operationBar.findViewById(R.id.buttonMessage).setOnClickListener(new OnClickEvent());
-					operationBar.findViewById(R.id.buttonAddContact).setOnClickListener(new OnClickEvent());
+					operationBar.findViewById(R.id.imageViewCall).setOnClickListener(new OnClickEvent());
+					operationBar.findViewById(R.id.imageViewMessage).setOnClickListener(new OnClickEvent());
+					operationBar.findViewById(R.id.imageViewAddContact).setOnClickListener(new OnClickEvent());
 					isListened.put(position, true);
 				}
 
@@ -259,7 +258,7 @@ public class Contacts extends SherlockFragment {
 		public final class ViewHolder {
 			TextView textViewContactName;
 			TextView textViewCellPhone;
-			LinearLayout linearLayoutContactOperation;
+			RelativeLayout relativeLayoutContactOperation;
 		}
 
 		private LayoutInflater layout;
@@ -336,7 +335,7 @@ public class Contacts extends SherlockFragment {
 				convertView = layout.inflate(R.layout.item_contact, null);
 				holder.textViewContactName = (TextView) convertView.findViewById(R.id.textViewContactName);
 				holder.textViewCellPhone = (TextView) convertView.findViewById(R.id.textViewCellPhone);
-				holder.linearLayoutContactOperation = (LinearLayout) convertView.findViewById(R.id.linearLayoutContactOperation);
+				holder.relativeLayoutContactOperation = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutContactOperation);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -350,8 +349,8 @@ public class Contacts extends SherlockFragment {
 				holder.textViewContactName.setText(Emp_Name);
 				holder.textViewCellPhone.setText(Emp_Cellphone);
 
-				((LinearLayout.LayoutParams) holder.linearLayoutContactOperation.getLayoutParams()).bottomMargin = -60;
-				holder.linearLayoutContactOperation.setVisibility(View.GONE);
+				((LinearLayout.LayoutParams) holder.relativeLayoutContactOperation.getLayoutParams()).bottomMargin = -60;
+				holder.relativeLayoutContactOperation.setVisibility(View.GONE);
 			}
 			return convertView;
 		}

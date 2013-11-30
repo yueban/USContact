@@ -4,7 +4,7 @@
     <string name="app_name">US联系人</string>
     <string name="action_settings">Settings</string>
     <string name="contentDescription">contentDescription</string>
-    <string name="searchhint">联系人</string>
+    <string name="searchhint">搜索：姓名 拼音 号码</string>
     <string name="bulksms">群发短信</string>
     <string name="confirm">确认</string>
     <string name="menu_dep_title">部门列表</string>

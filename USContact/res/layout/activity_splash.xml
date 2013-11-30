@@ -6,6 +6,16 @@
     android:background="#EEEEEE"
     tools:context=".SplashActivity" >
 
+    <ImageView
+        android:id="@+id/imageViewNcuhomeLogo"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_above="@+id/textViewSplashNcuhome"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/contentDescription"
+        android:paddingBottom="12dp"
+        android:src="@drawable/ncuhomelogo" />
+
     <TextView
         android:id="@+id/textViewSplashNcuhome"
         android:layout_width="wrap_content"

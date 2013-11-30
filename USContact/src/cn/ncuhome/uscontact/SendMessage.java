@@ -101,10 +101,11 @@ public class SendMessage extends SherlockListActivity {
 	// 群发短信
 	private void sendMessage() {
 		// 检查是否选择了联系人
-		boolean isNobodyChecked = false;
+		boolean isNobodyChecked = true;
 		for (int i = 0; i < isCheckedArray.size(); i++) {
-			if (isCheckedArray.get(i) == false && i == isCheckedArray.size() - 1) {
-				isNobodyChecked = true;
+			if (isCheckedArray.get(i) == true) {
+				isNobodyChecked = false;
+				break;
 			}
 		}
 		if (isNobodyChecked) {
