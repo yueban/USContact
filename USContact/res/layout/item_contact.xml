@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="8dp"
@@ -36,22 +35,18 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayoutContactOperation"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="-60dp"
-        android:orientation="horizontal"
-        android:paddingBottom="12dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:visibility="gone" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="12dp" >
 
         <ImageView
             android:id="@+id/imageViewCall"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentLeft="true"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
+            android:layout_toLeftOf="@+id/imageViewMessage"
             android:contentDescription="@string/contentDescription"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -59,11 +54,11 @@
 
         <ImageView
             android:id="@+id/imageViewMessage"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_toRightOf="@+id/imageViewCall"
+            android:layout_toLeftOf="@+id/imageViewAddContact"
             android:contentDescription="@string/contentDescription"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -71,15 +66,15 @@
 
         <ImageView
             android:id="@+id/imageViewAddContact"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_toRightOf="@+id/imageViewMessage"
             android:contentDescription="@string/contentDescription"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:src="@drawable/contact_add" />
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
