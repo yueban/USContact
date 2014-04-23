@@ -9,7 +9,7 @@ import android.os.Environment;
 
 public class IOHelper {
 
-	private static String SDPATH = Environment.getExternalStorageDirectory() + File.separator;;
+	private static String SDPATH = Environment.getExternalStorageDirectory() + File.separator;
 
 	public static String getSDPATH() {
 		return SDPATH;

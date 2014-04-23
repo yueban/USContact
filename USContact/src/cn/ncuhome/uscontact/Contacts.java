@@ -248,8 +248,6 @@ public class Contacts extends SherlockFragment {
 			return null;
 		}
 
-		
-		
 		@Override
 		public boolean areAllItemsEnabled() {
 			return true;
@@ -299,10 +297,10 @@ public class Contacts extends SherlockFragment {
 				HashMap<String, String> map = adapterlist.get(position);
 				final String Emp_Name = map.get("Emp_Name");
 				final String Emp_Cellphone = map.get("Emp_Cellphone");
-				
+
 				holder.textViewContactName.setText(Emp_Name);
 				holder.textViewCellPhone.setText(Emp_Cellphone);
-				
+
 				// 声明一个内部类监听联系人列表中的三个click事件（拨号，发短信，添加联系人）
 				class OnClickEvent implements OnClickListener {
 
