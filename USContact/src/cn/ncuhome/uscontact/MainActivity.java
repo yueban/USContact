@@ -30,6 +30,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.KeyEvent;
 import android.widget.Toast;
+import cn.ncuhome.fragment.FragmentContacts;
+import cn.ncuhome.fragment.FragmentMenuApp;
+import cn.ncuhome.fragment.FragmentMenuDep;
 import cn.ncuhome.helper.CodeHelper;
 import cn.ncuhome.helper.CodeHelper.BigFatAsyncTask;
 import cn.ncuhome.helper.DBHelper;
@@ -37,8 +40,6 @@ import cn.ncuhome.helper.DataOperation;
 import cn.ncuhome.helper.IOHelper;
 import cn.ncuhome.helper.MyListener.OnServiceListener;
 import cn.ncuhome.helper.WebHelper;
-import cn.ncuhome.menu.MenuApp;
-import cn.ncuhome.menu.MenuDep;
 import cn.ncuhome.service.UpdateService;
 import cn.ncuhome.service.UpdateService.MyBinder;
 
@@ -61,7 +62,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	// 声明需要的对象
 	private long exittime = 0;
 	private UpdateService updateService;
-	SlidingMenu sm;
+	public SlidingMenu sm;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -139,7 +140,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		Dep_ID = Dep_ID == null ? "-1" : Dep_ID;
 		Dep_Name = Dep_Name == null ? "联系人" : Dep_Name;
 		// 替换联系人页面
-		Contacts contacts = new Contacts();
+		FragmentContacts contacts = new FragmentContacts();
 		Bundle b = new Bundle();
 		b.putString("Dep_ID", Dep_ID);
 		b.putString("Dep_Name", Dep_Name);
@@ -151,8 +152,8 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	// 替换SlidingMenu菜单
 	private void showSlidingMenu() {
-		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame, new MenuDep()).commit();
-		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame_two, new MenuApp()).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame, new FragmentMenuDep()).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame_two, new FragmentMenuApp()).commit();
 	}
 
 	// ]]
@@ -168,7 +169,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -193,7 +193,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 			}
 		}).create().show();
 	}
@@ -220,7 +219,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		Dialog dialog = new AlertDialog.Builder(MainActivity.this).setTitle("软件更新").setMessage("发现新版本，是否更新？").setPositiveButton("更新", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				// 下载并安装新版本
 				new MyDownloadAsynvTask(MainActivity.this, downloadUrl, filename).execute("");
 			}
@@ -295,7 +293,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			return true;
 		case 1:
-			Contacts contacts = (Contacts) getSupportFragmentManager().findFragmentByTag("Contacts");
+			FragmentContacts contacts = (FragmentContacts) getSupportFragmentManager().findFragmentByTag("Contacts");
 			contacts.sendMessage();
 			return true;
 
@@ -344,8 +342,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 
 		@Override
-		public void doInMainThread(String result) {
-			// TODO Auto-generated method stub
+		public void doInBack(String result) {
 			switch (flag) {
 			case Dep:
 				DataOperation.insertDepDataByList(MainActivity.this, DataOperation.parseJsonByDepartment(result));
@@ -353,6 +350,20 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			case Emp:
 				DataOperation.insertContactDataByList(MainActivity.this, DataOperation.parseJsonByContact(result));
+				break;
+
+			case Newversion:
+				break;
+			}
+		}
+
+		@Override
+		public void doInMainThread(String result) {
+			switch (flag) {
+			case Dep:
+				break;
+
+			case Emp:
 				Toast.makeText(MainActivity.this, "联系人更新完成", Toast.LENGTH_LONG).show();
 				showSlidingMenu();
 				changeContactFragment(null, null);

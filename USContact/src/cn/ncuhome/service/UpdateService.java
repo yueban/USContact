@@ -50,6 +50,10 @@ public class UpdateService extends Service {
 		}
 
 		@Override
+		public void doInBack(String result) {
+		}
+
+		@Override
 		public void doInMainThread(String result) {
 			try {
 				JSONObject versionData = new JSONArray(result).getJSONObject(0);

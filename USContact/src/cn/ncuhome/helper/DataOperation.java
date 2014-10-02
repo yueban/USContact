@@ -1,6 +1,5 @@
 package cn.ncuhome.helper;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,9 +8,11 @@ import java.util.List;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import cn.ncuhome.model.Contact;
+import cn.ncuhome.model.Department;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.alibaba.fastjson.JSON;
 
 public class DataOperation {
 
@@ -47,26 +48,14 @@ public class DataOperation {
 		return sortString;
 	}
 
-	// [[ 将json数据转换为泛化列表
+	// 将json数据转换为泛化列表
 	public static List<Contact> parseJsonByContact(String jsondata) {
-		List<Contact> list = null;
-		// 实现Type接口，并利用Gson类将json数据转换为泛化列表
-		Type listType = new TypeToken<List<Contact>>() {
-		}.getType();
-		list = new Gson().fromJson(jsondata, listType);
-		return list;
+		return JSON.parseArray(jsondata, Contact.class);
 	}
 
 	public static List<Department> parseJsonByDepartment(String jsondata) {
-		List<Department> list = null;
-		// 实现Type接口，并利用Gson类将json数据转换为泛化列表
-		Type listType = new TypeToken<List<Department>>() {
-		}.getType();
-		list = new Gson().fromJson(jsondata, listType);
-		return list;
+		return JSON.parseArray(jsondata, Department.class);
 	}
-
-	// ]]
 
 	// [[ 从数据库中读取数据
 	public static ArrayList<HashMap<String, String>> getEmpListFromDatabase(Context context, String sql, String[] selectionArgs) {
@@ -120,87 +109,16 @@ public class DataOperation {
 		int i = 0;
 		for (Iterator<Contact> iterator = listClass.iterator(); iterator.hasNext();) {
 			Contact contact = iterator.next();
-			String Emp_Name = contact.getEmp_Name().trim();
-			String Emp_Cellphone = contact.getEmp_Cellphone().trim();
-			String sortString = getSortByEmpName(Emp_Name) + Emp_Cellphone;
+			Log.i("info", "contact--->" + contact.toString());
+			String Emp_Name = contact.getEmp_Name().trim().replaceAll(" ", "");
+			String Emp_Cellphone = contact.getEmp_Cellphone().trim().replaceAll(" ", "");
+			String sortString = "";
+			sortString = getSortByEmpName(Emp_Name) + Emp_Cellphone;
+
 			// 添加sql语句
 			sql[i] = "insert into " + DBHelper.T_ContactData_name + " (Sort,Dep_ID,Dep_Name,Emp_ID,Emp_Name,Emp_Cellphone) values ('" + sortString.trim() + "','" + contact.getDep_ID().trim() + "','" + contact.getDep_Name().trim() + "','" + contact.getEmp_ID() + "','" + Emp_Name + "','" + Emp_Cellphone + "')";
 			i++;
 		}
 		DBHelper.execSQLDatabase(context, DBHelper.database_name, sql);
 	}
-
-	// ]]
-	
-	// [[ Model类
-	public class Contact {
-		public String Dep_ID;
-		public String Dep_Name;
-		public String Emp_ID;
-		public String Emp_Name;
-		public String Emp_Cellphone;
-
-		public String getDep_ID() {
-			return Dep_ID;
-		}
-
-		public void setDep_ID(String dep_ID) {
-			Dep_ID = dep_ID;
-		}
-
-		public String getDep_Name() {
-			return Dep_Name;
-		}
-
-		public void setDep_Name(String dep_Name) {
-			Dep_Name = dep_Name;
-		}
-
-		public String getEmp_ID() {
-			return Emp_ID;
-		}
-
-		public void setEmp_ID(String emp_ID) {
-			Emp_ID = emp_ID;
-		}
-
-		public String getEmp_Name() {
-			return Emp_Name;
-		}
-
-		public void setEmp_Name(String emp_Name) {
-			Emp_Name = emp_Name;
-		}
-
-		public String getEmp_Cellphone() {
-			return Emp_Cellphone;
-		}
-
-		public void setEmp_Cellphone(String emp_Cellphone) {
-			Emp_Cellphone = emp_Cellphone;
-		}
-	}
-
-	public class Department {
-		public String Dep_ID;
-		public String Dep_Name;
-
-		public String getDep_ID() {
-			return Dep_ID;
-		}
-
-		public void setDep_ID(String dep_ID) {
-			Dep_ID = dep_ID;
-		}
-
-		public String getDep_Name() {
-			return Dep_Name;
-		}
-
-		public void setDep_Name(String dep_Name) {
-			Dep_Name = dep_Name;
-		}
-	}
-
-	// ]]
 }

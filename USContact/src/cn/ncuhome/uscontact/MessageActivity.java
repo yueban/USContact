@@ -32,7 +32,7 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class SendMessage extends SherlockListActivity {
+public class MessageActivity extends SherlockListActivity {
 
 	// 声明需要的控件
 	private RelativeLayout indexDialog;
@@ -68,7 +68,7 @@ public class SendMessage extends SherlockListActivity {
 		Intent intent = getIntent();
 		final String Dep_Name = intent.getStringExtra("Dep_Name");
 		contactlist.addAll((ArrayList<HashMap<String, String>>) intent.getSerializableExtra("contactlist"));
-		myListAdapter = new MyListAdapter(SendMessage.this, contactlist);
+		myListAdapter = new MyListAdapter(MessageActivity.this, contactlist);
 		setListAdapter(myListAdapter);
 
 		// 设置IndexBar
@@ -109,7 +109,7 @@ public class SendMessage extends SherlockListActivity {
 			}
 		}
 		if (isNobodyChecked) {
-			Toast.makeText(SendMessage.this, "一个小伙伴都没选唉~~", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MessageActivity.this, "一个小伙伴都没选唉~~", Toast.LENGTH_SHORT).show();
 		} else {
 			// 拼接号码字符串
 			String phoneString = "";

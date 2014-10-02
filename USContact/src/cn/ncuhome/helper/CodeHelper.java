@@ -150,7 +150,8 @@ public class CodeHelper {
 		@Override
 		protected String doInBackground(String... params) {
 			String jsondata = WebHelper.getJsonData(url, namespace, method, params[0]);
-			return jsondata;
+			doInBack(jsondata);
+			return "";
 		}
 
 		@Override
@@ -160,6 +161,8 @@ public class CodeHelper {
 				pDialog.dismiss();
 			}
 		}
+
+		public abstract void doInBack(String result);
 
 		public abstract void doInMainThread(String result);
 	}

@@ -1,4 +1,4 @@
-package cn.ncuhome.menu;
+package cn.ncuhome.fragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import cn.ncuhome.uscontact.R;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class MenuDep extends SherlockListFragment {
+public class FragmentMenuDep extends SherlockListFragment {
 
 	private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 

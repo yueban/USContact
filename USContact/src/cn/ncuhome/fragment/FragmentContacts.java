@@ -1,4 +1,4 @@
-package cn.ncuhome.uscontact;
+package cn.ncuhome.fragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +29,14 @@ import android.widget.TextView;
 import cn.ncuhome.helper.CodeHelper;
 import cn.ncuhome.helper.DBHelper;
 import cn.ncuhome.helper.DataOperation;
+import cn.ncuhome.uscontact.MainActivity;
+import cn.ncuhome.uscontact.MessageActivity;
+import cn.ncuhome.uscontact.R;
 import cn.ncuhome.widget.IndexBar;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-public class Contacts extends SherlockFragment {
+public class FragmentContacts extends SherlockFragment {
 
 	// 声明需要的变量
 	private String Dep_Name;
@@ -51,12 +54,12 @@ public class Contacts extends SherlockFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_contacts, null);
+		View view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
 		// 绑定控件
 		listViewContact = (ListView) view.findViewById(R.id.listViewContact);
 		editTextSearch = (EditText) view.findViewById(R.id.editTextSearch);
-		indexDialog = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.indexdialog, null);
+		indexDialog = (RelativeLayout) inflater.inflate(R.layout.indexdialog, container, false);
 		indexBarContacts = (IndexBar) view.findViewById(R.id.indexBarContacts);
 
 		indexDialog.setVisibility(View.INVISIBLE);
@@ -132,7 +135,7 @@ public class Contacts extends SherlockFragment {
 	// 群发短信，供其父Activity调用
 	public void sendMessage() {
 		// 跳转到群发短信选择联系人页面，并将当前联系人列表传送过去
-		Intent intent = new Intent(getActivity(), SendMessage.class);
+		Intent intent = new Intent(getActivity(), MessageActivity.class);
 		intent.putExtra("contactlist", myListAdapter.getList());
 		intent.putExtra("Dep_Name", Dep_Name);
 		startActivity(intent);
@@ -282,7 +285,7 @@ public class Contacts extends SherlockFragment {
 			// 当第一次使用时，需要设定view所表示的layout，这里用ViewHolder更简单，而且方便管理
 			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = layout.inflate(R.layout.item_contact, null);
+				convertView = layout.inflate(R.layout.item_contact, parent, false);
 				holder.textViewContactName = (TextView) convertView.findViewById(R.id.textViewContactName);
 				holder.textViewCellPhone = (TextView) convertView.findViewById(R.id.textViewCellPhone);
 				holder.imageViewCall = (ImageView) convertView.findViewById(R.id.imageViewCall);

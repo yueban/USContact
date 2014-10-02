@@ -1,4 +1,4 @@
-package cn.ncuhome.menu;
+package cn.ncuhome.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import cn.ncuhome.uscontact.R;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class MenuApp extends SherlockListFragment {
+public class FragmentMenuApp extends SherlockListFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
