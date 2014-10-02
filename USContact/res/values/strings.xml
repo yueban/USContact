@@ -83,14 +83,14 @@
     </style>
 
     <style name="windowActivityOpenCloseAnim">
-        <item name="android:activityOpenEnterAnimation">@anim/enter_enter</item>
+        <item name="android:activityOpenEnterAnimation">@anim/exit_enter</item>
         <item name="android:activityOpenExitAnimation">@anim/enter_exit</item>
         <item name="android:activityCloseEnterAnimation">@anim/exit_enter</item>
-        <item name="android:activityCloseExitAnimation">@anim/exit_exit</item>
+        <item name="android:activityCloseExitAnimation">@anim/enter_exit</item>
     </style>
 
     <style name="animstyle">
-        <item name="android:duration">300</item>
+        <item name="android:duration">400</item>
         <item name="android:interpolator">@android:anim/accelerate_decelerate_interpolator</item>
     </style>
 

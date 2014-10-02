@@ -112,7 +112,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				showUpdateLog();
 			}
 			showSlidingMenu();
-			changeContactFragment(null, null);
+			switchContactFragment(null, null);
 			// 启动后台检查更新服务
 			if (WebHelper.isConnectingtoInternet(MainActivity.this)) {
 				String updateDay = data.getString("updateDay", null);
@@ -135,7 +135,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	// [[ 显示UI界面
 	// 替换联系人页面
-	private void changeContactFragment(String Dep_ID, String Dep_Name) {
+	private void switchContactFragment(String Dep_ID, String Dep_Name) {
 		// 收起SlidingMenu
 		Dep_ID = Dep_ID == null ? "-1" : Dep_ID;
 		Dep_Name = Dep_Name == null ? "联系人" : Dep_Name;
@@ -305,7 +305,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	// MenuDep菜单选择
 	public void switchMenuDep(String Dep_ID, String Dep_Name) {
-		changeContactFragment(Dep_ID, Dep_Name);
+		switchContactFragment(Dep_ID, Dep_Name);
 	}
 
 	// MenuApp菜单选择
@@ -366,7 +366,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			case Emp:
 				Toast.makeText(MainActivity.this, "联系人更新完成", Toast.LENGTH_LONG).show();
 				showSlidingMenu();
-				changeContactFragment(null, null);
+				switchContactFragment(null, null);
 				break;
 
 			case Newversion:

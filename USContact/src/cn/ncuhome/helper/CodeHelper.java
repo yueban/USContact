@@ -151,7 +151,7 @@ public class CodeHelper {
 		protected String doInBackground(String... params) {
 			String jsondata = WebHelper.getJsonData(url, namespace, method, params[0]);
 			doInBack(jsondata);
-			return "";
+			return jsondata;
 		}
 
 		@Override
